@@ -1,0 +1,36 @@
+{
+  "version": "1.0.0",
+  "workspace": "JukeBox London – Stitch Vibe Config",
+  "description": "Google Stitch workspace configuration that drives AI-assisted UI design and syncs approved changes directly to GitHub.",
+
+  "syncTarget": {
+    "repo": "JB3Ai/jukebox-london",
+    "branch": "main",
+    "paths": {
+      "designTokens": "DESIGN.md",
+      "styles":       "client/styles/",
+      "assets":       "client/public/assets/skins/"
+    }
+  },
+
+  "vibes": [
+    {
+      "id": "london-legend",
+      "label": "London Legend",
+      "description": "Dark, cinematic, gold-accented. The default JukeBox skin.",
+      "accentColor": "#d4af37",
+      "glassBlur": 12,
+      "fontDisplay": "Neue Montreal"
+    },
+    {
+      "id": "electric-blue",
+      "label": "Electric Blue",
+      "description": "High-energy rave aesthetic with cyan glows.",
+      "accentColor": "#00d4ff",
+      "glassBlur": 16,
+      "fontDisplay": "Inter"
+    }
+  ],
+
+  "commitTemplate": "design(stitch): sync {vibeName} skin from Stitch workspace [auto]"
+}
