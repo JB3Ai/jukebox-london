@@ -9,6 +9,19 @@ const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 app.use(express.json());
 app.use(express.static('public')); // Serves your landing page
 
+// STITCH HANDSHAKE ENDPOINT
+app.get('/api/handshake', (req, res) => {
+    res.json({
+        status: "connected",
+        project: "JukeBox London Legend",
+        workspace_id: "JB3-LDN-2026-LEGEND",
+        sync_provider: "github",
+        repository: "JB3Ai/jukebox-london",
+        environment: "hybrid-cloud",
+        timestamp: new Date().toISOString()
+    });
+});
+
 // AI CONDUCTOR ENDPOINT
 app.post('/api/conduct', async (req, res) => {
     try {
