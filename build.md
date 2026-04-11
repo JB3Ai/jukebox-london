@@ -23,3 +23,21 @@ Ensure the following are set in the cPanel Node.js Selector:
 1. Commit changes to `main` branch.
 2. Pull updates in cPanel Git Version Control.
 3. Restart Node.js application in cPanel dashboard.
+
+---
+
+# 🛠️ JukeBox Build & Deploy Guide
+
+## 1. Local Development (VS Code)
+1. Open this folder in VS Code.
+2. Create a `.env` file: `GEMINI_API_KEY=your_key_here`.
+3. Run `npm install` in your terminal.
+4. Run `npm run dev` to test locally on `localhost:3000`.
+
+## 2. Pushing to GitHub
+When you finish a feature, run these commands in VS Code:
+```bash
+git add .
+git commit -m "update: refining the London Legend logic"
+git push origin main
+```
