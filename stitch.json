@@ -1,0 +1,17 @@
+{
+  "project_name": "JukeBox London Legend",
+  "workspace_id": "JB3-LDN-2026-LEGEND",
+  "sync_provider": "github",
+  "repository": "JB3Ai/jukebox-london",
+  "design_tokens": "./DESIGN.md",
+  "auto_deploy": true,
+  "environment": {
+    "url": "https://app.jb3ai.com",
+    "mode": "hybrid-cloud"
+  },
+  "permissions": {
+    "ui_modification": "full",
+    "asset_generation": "high-res",
+    "audio_stem_access": true
+  }
+}
