@@ -2,8 +2,9 @@
   "name": "jukebox-london",
   "version": "1.0.0",
   "description": "The \"London Legend\" Music Player and creator",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,8 +20,8 @@
   },
   "homepage": "https://github.com/JB3Ai/jukebox-london#readme",
   "dependencies": {
-    "@google/genai": "^1.49.0",
-    "dotenv": "^17.4.1",
+    "@google/generative-ai": "^0.21.0",
+    "dotenv": "^16.4.5",
     "express": "^5.2.1"
   }
 }
