@@ -1,0 +1,87 @@
+/**
+ * Liquid Glass UI – Global Styles
+ * JukeBox London Design System
+ *
+ * Design Tokens are defined in /DESIGN.md and mirrored as CSS custom
+ * properties here so that every component can consume them via var().
+ */
+
+/* ─── Design Tokens ──────────────────────────────────────────────────────── */
+:root {
+  /* Colors */
+  --color-bg-primary:        #0a0a0f;
+  --color-bg-glass:          rgba(255, 255, 255, 0.06);
+  --color-border-glass:      rgba(255, 255, 255, 0.12);
+  --color-accent-gold:       #d4af37;
+  --color-accent-electric:   #00d4ff;
+  --color-accent-coral:      #ff6b6b;
+  --color-text-primary:      #f0ece4;
+  --color-text-muted:        rgba(240, 236, 228, 0.55);
+
+  /* Typography */
+  --font-display:            'Neue Montreal', 'Inter', sans-serif;
+  --font-mono:               'JetBrains Mono', 'Fira Code', monospace;
+  --font-size-base:          16px;
+
+  /* Spacing */
+  --space-xs:  4px;
+  --space-sm:  8px;
+  --space-md:  16px;
+  --space-lg:  32px;
+  --space-xl:  64px;
+
+  /* Blur / Glass */
+  --glass-blur:              12px;
+  --glass-saturation:        180%;
+  --glass-border-radius:     16px;
+
+  /* Transitions */
+  --transition-fast:         150ms ease;
+  --transition-med:          300ms ease;
+  --transition-slow:         600ms ease;
+}
+
+/* ─── Reset ──────────────────────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: var(--font-size-base);
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  font-family: var(--font-display);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* ─── Liquid Glass Utility Classes ───────────────────────────────────────── */
+
+/* Base glass panel */
+.glass {
+  background: var(--color-bg-glass);
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturation));
+  border: 1px solid var(--color-border-glass);
+  border-radius: var(--glass-border-radius);
+}
+
+/* Elevated glass — stronger blur for modals / player bar */
+.glass--elevated {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(24px) saturate(200%);
+  -webkit-backdrop-filter: blur(24px) saturate(200%);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+}
+
+/* Accent glow helpers */
+.glow--gold    { box-shadow: 0 0 20px rgba(212, 175,  55, 0.35); }
+.glow--electric { box-shadow: 0 0 20px rgba(  0, 212, 255, 0.35); }
+.glow--coral   { box-shadow: 0 0 20px rgba(255, 107, 107, 0.35); }
