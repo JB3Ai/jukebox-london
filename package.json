@@ -1,0 +1,26 @@
+{
+  "name": "jukebox-london",
+  "version": "1.0.0",
+  "description": "The \"London Legend\" Music Player and creator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JB3Ai/jukebox-london.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/JB3Ai/jukebox-london/issues"
+  },
+  "homepage": "https://github.com/JB3Ai/jukebox-london#readme",
+  "dependencies": {
+    "@google/genai": "^1.49.0",
+    "dotenv": "^17.4.1",
+    "express": "^5.2.1"
+  }
+}
