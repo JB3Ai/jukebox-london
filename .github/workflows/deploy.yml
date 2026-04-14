@@ -40,7 +40,7 @@ jobs:
             --exclude='node_modules'
             --exclude='client/node_modules'
           path: ./
-          remote_path: /home/appjbaic/jukebox-london/
+          remote_path: /home/${{ secrets.DEPLOY_USER }}/jukebox-london/
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_KEY }}
@@ -52,7 +52,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /home/appjbaic/jukebox-london
+            cd /home/${{ secrets.DEPLOY_USER }}/jukebox-london
             npm ci --omit=dev
             mkdir -p tmp
             touch tmp/restart.txt
