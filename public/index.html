@@ -1,61 +1,170 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>JukeBox | Conduct</title>
-    <style>
-        body {
-            background: #0A0A0F;
-            color: white;
-            font-family: 'SF Pro Rounded', sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-            overflow: hidden;
-        }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 3rem;
-            border-radius: 40px;
-            text-align: center;
-            box-shadow: 0 0 50px rgba(0, 230, 242, 0.2);
-        }
-        h1 {
-            font-size: 4rem;
-            text-transform: uppercase;
-            letter-spacing: -2px;
-            margin-bottom: 0;
-            background: linear-gradient(to bottom, #fff, #00E6F2);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .glow-btn {
-            background: #00E6F2;
-            color: black;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 100px;
-            font-weight: bold;
-            margin-top: 2rem;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-        .glow-btn:hover {
-            box-shadow: 0 0 20px #00E6F2;
-            transform: scale(1.05);
-        }
-    </style>
-</head>
-<body>
-    <div class="glass-card">
-        <h1>Conduct</h1>
-        <p>London Legend Edition v1.0</p>
-        <button class="glow-btn" onclick="alert('Neural Sync Active...')">ENTER BOOTH</button>
-    </div>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="JukeBox London: conduct AI-generated electronic music in real time."
+    />
+    <title>JukeBox London | Conduct The Night</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=Rajdhani:wght@500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/globals.css" />
+  </head>
+  <body data-phase="peak-bass">
+    <div class="background-noise" aria-hidden="true"></div>
+
+    <header class="topbar">
+      <p class="brand">JukeBox London</p>
+      <button class="chip" id="phase-chip">Peak-Bass · 136 BPM</button>
+    </header>
+
+    <main>
+      <section class="hero glass-panel">
+        <div class="hero-copy">
+          <p class="eyebrow">AI-native DJ cockpit</p>
+          <h1>Conduct London after dark.</h1>
+          <p>
+            Shape infinite electronic streams with live phase shifts, warehouse
+            energy curves, and precision transitions tuned for real dance
+            floors.
+          </p>
+          <div class="actions">
+            <a href="#conductor" class="btn btn-primary">Open Conductor</a>
+            <a href="#phases" class="btn btn-secondary">View 4 Phases</a>
+          </div>
+        </div>
+        <div class="hero-meter glass-card neon-border-cyan" aria-hidden="true">
+          <p>Global Energy</p>
+          <div class="meter-track">
+            <span style="--height: 34%"></span>
+            <span style="--height: 57%"></span>
+            <span style="--height: 91%"></span>
+            <span style="--height: 74%"></span>
+            <span style="--height: 68%"></span>
+            <span style="--height: 85%"></span>
+            <span style="--height: 52%"></span>
+          </div>
+          <small>128 BPM · Warehouse Flux</small>
+        </div>
+      </section>
+
+      <section id="phases" class="section-block">
+        <div class="section-title">
+          <p>Energy Architecture</p>
+          <h2>4 live phases, one continuous story</h2>
+        </div>
+        <div class="phase-grid">
+          <button type="button" class="phase-card glass-card" data-phase="PEAK-BASS">
+            <h3>PEAK-BASS</h3>
+            <p>Hard techno, jungle pressure, heavy drop geometry.</p>
+          </button>
+          <button type="button" class="phase-card glass-card" data-phase="MAIN-FLOOR">
+            <h3>MAIN-FLOOR</h3>
+            <p>Groove-weighted UK garage, deep house, liquid pulse.</p>
+          </button>
+          <button type="button" class="phase-card glass-card" data-phase="SUNRISE">
+            <h3>SUNRISE</h3>
+            <p>Breakbeat air, dub techno glow, soft movement arcs.</p>
+          </button>
+          <button type="button" class="phase-card glass-card" data-phase="ZONED-OUT">
+            <h3>ZONED-OUT</h3>
+            <p>Ambient dub and downtempo breath for after-hours drift.</p>
+          </button>
+        </div>
+      </section>
+
+      <section id="conductor" class="conductor glass-panel">
+        <div class="section-title">
+          <p>Live Session</p>
+          <h2>Run your first AI set</h2>
+        </div>
+        <form id="conductor-form">
+          <fieldset>
+            <legend>Phase Wheel</legend>
+            <div class="phase-wheel-block">
+              <div
+                id="phase-wheel"
+                class="phase-wheel"
+                role="slider"
+                aria-label="Energy phase dial"
+                aria-valuemin="1"
+                aria-valuemax="4"
+                aria-valuenow="1"
+                aria-valuetext="Peak-Bass"
+                tabindex="0"
+              >
+                <div class="phase-wheel-ring"></div>
+                <div class="phase-wheel-needle"></div>
+                <div class="phase-wheel-center"></div>
+              </div>
+              <p class="phase-wheel-readout">
+                Selected:
+                <strong id="phase-readout">Peak-Bass</strong>
+              </p>
+            </div>
+          </fieldset>
+
+          <label>
+            Atmosphere
+            <input
+              id="atmosphere"
+              name="atmosphere"
+              type="text"
+              value="rain-soaked warehouse pulse"
+              autocomplete="off"
+              required
+            />
+          </label>
+
+          <label>
+            Artist seed
+            <input
+              id="artistSeed"
+              name="artistSeed"
+              type="text"
+              value="90s UK jungle and garage lineage"
+              autocomplete="off"
+              required
+            />
+          </label>
+
+          <button class="btn btn-primary submit-btn" type="submit">
+            Generate Stream
+          </button>
+          <p id="status-line" class="status-line">Ready to conduct.</p>
+        </form>
+
+        <div class="playback glass-card neon-border-magenta">
+          <p class="playback-title">Now Playing</p>
+          <div id="waveform-visualizer" class="waveform" aria-hidden="true"></div>
+          <audio id="generated-audio" controls preload="none"></audio>
+          <p id="lyrics" class="lyrics">
+            Lyrics and composition notes from the model will appear here.
+          </p>
+          <div class="history">
+            <p class="history-title">Session History</p>
+            <div class="history-actions">
+              <button class="btn btn-secondary mini-btn" id="history-export" type="button">
+                Export JSON
+              </button>
+              <button class="btn btn-secondary mini-btn" id="history-share" type="button">
+                Share Summary
+              </button>
+            </div>
+            <ul id="session-history" class="history-list">
+              <li class="history-empty">No sets generated yet.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js" defer></script>
+  </body>
 </html>

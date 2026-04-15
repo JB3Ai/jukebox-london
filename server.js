@@ -1,40 +1,73 @@
 require('dotenv').config();
 const path = require('path');
 const express = require('express');
-const cors = require('cors');
-const rateLimit = require('express-rate-limit');
-
-const lyriaRoutes = require('./src/api/lyria');
-const producerRoutes = require('./src/api/producer');
+const { GoogleGenAI } = require('@google/genai');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const port = Number(process.env.PORT) || 3000;
+const apiKey = process.env.GEMINI_API_KEY;
 
-app.use(cors());
-app.use(express.json());
+const ai = apiKey ? new GoogleGenAI({ apiKey }) : null;
 
-// API Routes
-app.use('/api/lyria', lyriaRoutes);
-app.use('/api/producer', producerRoutes);
+app.use(express.json({ limit: '1mb' }));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// Health check
 app.get('/health', (_req, res) => {
   res.json({ status: 'ok', project: 'JukeBox London' });
 });
 
-// Serve the Next.js static export (built to client/out/)
-const clientOut = path.join(__dirname, 'client', 'out');
-app.use(express.static(clientOut));
+app.post('/api/conduct', async (req, res) => {
+  const { phase, atmosphere, artistSeed } = req.body || {};
 
-const staticRateLimit = rateLimit({
-  windowMs: 60 * 1000,
-  max: 120,
+  if (!ai) {
+    res.status(503).json({
+      error: 'GEMINI_API_KEY is not configured.',
+      message: 'Set GEMINI_API_KEY in cPanel Node.js environment variables.',
+    });
+    return;
+  }
+
+  try {
+    const prompt = [
+      `Generate a ${phase || 'main-floor'} electronic track.`,
+      `Atmosphere: ${atmosphere || 'warehouse pulse'}.`,
+      `Artist seed: ${artistSeed || 'London club lineage'}.`,
+      'Style: London warehouse, DJ-friendly transitions, detailed low end.',
+    ].join(' ');
+
+    const result = await ai.models.generateContent({
+      model: 'lyria-3-pro-preview',
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      config: {
+        responseModalities: ['AUDIO', 'TEXT'],
+        responseMimeType: 'audio/wav',
+      },
+    });
+
+    const candidate = result.candidates && result.candidates[0];
+    const parts = (candidate && candidate.content && candidate.content.parts) || [];
+    const audioPart = parts.find((part) => part.inlineData && part.inlineData.data);
+    const textPart = parts.find((part) => typeof part.text === 'string');
+
+    if (!audioPart || !audioPart.inlineData || !audioPart.inlineData.data) {
+      res.status(502).json({ error: 'No audio payload returned by model.' });
+      return;
+    }
+
+    res.json({
+      audioData: audioPart.inlineData,
+      lyrics: (textPart && textPart.text) || 'Instrumental stream generated.',
+    });
+  } catch (error) {
+    console.error('Conduct endpoint failed:', error);
+    res.status(500).json({ error: 'Neural Buffer Error: Transition Failed.' });
+  }
 });
 
-app.get(/^(?!\/api\/).*$/, staticRateLimit, (_req, res) => {
-  res.sendFile(path.join(clientOut, 'index.html'));
+app.get('*', (_req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`JukeBox London backend running on port ${PORT}`);
+app.listen(port, () => {
+  console.log(`JukeBox Node.js server live on port ${port}`);
 });
