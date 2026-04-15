@@ -1,0 +1,20 @@
+---
+deployment:
+  tasks:
+    # ── Paths ─────────────────────────────────────────────────────────────────
+    # APP_DIR must match the "Application root" set in cPanel → Setup Node.js App
+    - export APP_DIR=$HOME/jukebox-london
+
+    # ── Sync code to app directory ────────────────────────────────────────────
+    - /bin/cp -r . $APP_DIR
+    - /bin/rm -rf $APP_DIR/.git $APP_DIR/.github
+
+    # ── Install backend production dependencies ───────────────────────────────
+    - cd $APP_DIR && npm ci --omit=dev
+
+    # ── Build Next.js static frontend ─────────────────────────────────────────
+    - cd $APP_DIR/client && npm ci && npm run build
+
+    # ── Restart Passenger (cPanel Node.js) ────────────────────────────────────
+    - mkdir -p $APP_DIR/tmp
+    - touch $APP_DIR/tmp/restart.txt
