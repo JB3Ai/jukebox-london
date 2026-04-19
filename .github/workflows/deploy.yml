@@ -31,7 +31,6 @@ jobs:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
-          passphrase: ${{ secrets.DEPLOY_KEY_PASSPHRASE }}
           port: 55222
           script_stop: true
           script: |
