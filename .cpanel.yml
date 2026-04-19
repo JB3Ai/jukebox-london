@@ -1,8 +1,7 @@
 ---
 deployment:
   tasks:
-    - export APP_DIR=/home/appjbaic/repositories/jukebox-london
-    - /bin/echo "Deploying JukeBox from ${APP_DIR}"
-    - cd "${APP_DIR}" && npm ci --omit=dev
-    - /bin/mkdir -p "${APP_DIR}/tmp"
-    - /usr/bin/touch "${APP_DIR}/tmp/restart.txt"
+    - /bin/echo "Deploying JukeBox from /home/appjbaic/repositories/jukebox-london"
+    - cd /home/appjbaic/repositories/jukebox-london && npm ci --omit=dev
+    - /bin/mkdir -p /home/appjbaic/repositories/jukebox-london/tmp
+    - /usr/bin/touch /home/appjbaic/repositories/jukebox-london/tmp/restart.txt
