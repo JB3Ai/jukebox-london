@@ -16,18 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '24'
           cache: 'npm'
 
-      - name: Install dependencies (backend)
+      - name: Clean install dependencies
         run: npm ci
 
-      - name: Install dependencies (frontend)
-        working-directory: client
-        run: npm ci
-
-      - name: Build frontend
-        working-directory: client
+      - name: Build TypeScript
         run: npm run build
 
       - name: Upload files to server via rsync
@@ -38,9 +33,8 @@ jobs:
             --exclude='.git'
             --exclude='.github'
             --exclude='node_modules'
-            --exclude='client/node_modules'
           path: ./
-          remote_path: /home/${{ secrets.DEPLOY_USER }}/jukebox-london/
+          remote_path: /home/${{ secrets.DEPLOY_USER }}/repositories/jukebox-london/
           remote_host: ${{ secrets.DEPLOY_HOST }}
           remote_user: ${{ secrets.DEPLOY_USER }}
           remote_key: ${{ secrets.DEPLOY_KEY }}
@@ -52,7 +46,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd /home/${{ secrets.DEPLOY_USER }}/jukebox-london
+            cd /home/${{ secrets.DEPLOY_USER }}/repositories/jukebox-london
             npm ci --omit=dev
             mkdir -p tmp
             touch tmp/restart.txt
