@@ -13,6 +13,7 @@ client/out/
 
 # PM2
 .pm2/
+tmp/
 
 # OS
 .DS_Store
