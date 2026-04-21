@@ -10,6 +10,8 @@ const historyList = document.querySelector('#session-history');
 const historyExportBtn = document.querySelector('#history-export');
 const historyShareBtn = document.querySelector('#history-share');
 const waveformEl = document.querySelector('#waveform-visualizer');
+const neuralHandshakeBtn = document.querySelector('#neural-handshake-btn');
+const handshakeStatus = document.querySelector('#handshake-status');
 
 const HISTORY_KEY = 'jukebox-session-history-v1';
 const MAX_HISTORY_ITEMS = 5;
@@ -45,6 +47,20 @@ const getHistory = () => {
 
 const setHistory = (entries) => {
   localStorage.setItem(HISTORY_KEY, JSON.stringify(entries.slice(0, MAX_HISTORY_ITEMS)));
+};
+
+const saveSessionEntry = ({ phase, atmosphere, artistSeed }) => {
+  const nextHistory = [
+    {
+      phase: phaseMeta[phase]?.label || phase,
+      atmosphere,
+      artistSeed,
+      timestamp: Date.now(),
+    },
+    ...getHistory(),
+  ];
+  setHistory(nextHistory);
+  renderHistory();
 };
 
 const renderHistory = () => {
@@ -170,6 +186,89 @@ const applyPhaseTheme = (phase) => {
     statusLine.textContent = `${meta.label} phase armed.`;
   }
 };
+
+const enterBooth = async () => {
+  if (isGenerating) return;
+
+  const atmosphere = '140BPM London warehouse neural buffer';
+  const artistSeed = 'London club lineage';
+
+  if (neuralHandshakeBtn) {
+    neuralHandshakeBtn.textContent = 'SYNCING...';
+    neuralHandshakeBtn.disabled = true;
+  }
+  if (handshakeStatus) {
+    handshakeStatus.textContent = 'INITIALIZING NEURAL BUFFER...';
+  }
+  if (statusLine) {
+    statusLine.textContent = 'Neural handshake in progress...';
+  }
+
+  isGenerating = true;
+  syncWaveAnimationState();
+  updateWaveform();
+
+  try {
+    const response = await fetch('/api/conduct', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        phase: selectedPhase,
+        atmosphere,
+        artistSeed,
+      }),
+    });
+    const payload = await response.json();
+
+    if (!response.ok) {
+      throw new Error(payload?.message || payload?.error || 'Neural handshake failed.');
+    }
+
+    const inlineData = payload?.audioData;
+    const data = inlineData?.data || '';
+    const mimeType = inlineData?.mimeType || 'audio/wav';
+
+    if (data && audioEl) {
+      audioEl.src = `data:${mimeType};base64,${data}`;
+      await audioEl.play().catch(() => null);
+    }
+    if (payload?.lyrics && lyricsEl) {
+      lyricsEl.textContent = payload.lyrics;
+    }
+
+    saveSessionEntry({ phase: selectedPhase, atmosphere, artistSeed });
+    safeVibrate([18, 32, 18]);
+
+    if (handshakeStatus) {
+      handshakeStatus.innerHTML = '<strong>SYNCED:</strong> Ready to conduct.';
+    }
+    if (statusLine) {
+      statusLine.textContent = data ? 'Neural sync complete. Playback armed.' : 'Neural sync complete.';
+    }
+    if (neuralHandshakeBtn) {
+      neuralHandshakeBtn.textContent = 'Start Session';
+    }
+  } catch (error) {
+    if (handshakeStatus) {
+      handshakeStatus.textContent = 'CONNECTION ERROR: Check server logs.';
+    }
+    if (statusLine) {
+      statusLine.textContent = error.message || 'Connection error.';
+    }
+    if (neuralHandshakeBtn) {
+      neuralHandshakeBtn.textContent = 'Retry Sync';
+    }
+  } finally {
+    isGenerating = false;
+    if (neuralHandshakeBtn) {
+      neuralHandshakeBtn.disabled = false;
+    }
+    syncWaveAnimationState();
+    updateWaveform();
+  }
+};
+
+window.enterBooth = enterBooth;
 
 const movePhaseByStep = (delta) => {
   const current = phaseOrder.indexOf(selectedPhase);
@@ -340,17 +439,7 @@ if (form) {
         lyricsEl.textContent = payload.lyrics;
       }
 
-      const nextHistory = [
-        {
-          phase: phaseMeta[selectedPhase]?.label || selectedPhase,
-          atmosphere,
-          artistSeed,
-          timestamp: Date.now(),
-        },
-        ...getHistory(),
-      ];
-      setHistory(nextHistory);
-      renderHistory();
+      saveSessionEntry({ phase: selectedPhase, atmosphere, artistSeed });
 
       safeVibrate([20, 36, 20]);
       statusLine.textContent = 'Stream generated. Playback started.';

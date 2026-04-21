@@ -35,9 +35,19 @@
             floors.
           </p>
           <div class="actions">
-            <a href="#conductor" class="btn btn-primary">Open Conductor</a>
+            <button
+              type="button"
+              class="btn btn-primary glow-btn"
+              id="neural-handshake-btn"
+              onclick="enterBooth()"
+            >
+              Enter Booth
+            </button>
             <a href="#phases" class="btn btn-secondary">View 4 Phases</a>
           </div>
+          <p id="handshake-status" class="handshake-status">
+            London Legend Edition standing by.
+          </p>
         </div>
         <div class="hero-meter glass-card neon-border-cyan" aria-hidden="true">
           <p>Global Energy</p>

@@ -186,6 +186,25 @@ h1 {
   box-shadow: 0 0 22px color-mix(in srgb, var(--phase-accent) 45%, transparent);
 }
 
+.glow-btn[disabled] {
+  cursor: wait;
+  opacity: 0.52;
+  transform: none;
+}
+
+.handshake-status {
+  margin-top: 0.8rem;
+  color: var(--text-secondary);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.86rem;
+  min-height: 1.25rem;
+}
+
+.handshake-status strong {
+  color: var(--electric-cyan);
+  font-weight: 500;
+}
+
 .btn-secondary {
   background: rgba(255, 255, 255, 0.03);
   color: var(--phase-secondary);
