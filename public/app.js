@@ -12,10 +12,14 @@ const historyShareBtn = document.querySelector('#history-share');
 const waveformEl = document.querySelector('#waveform-visualizer');
 const neuralHandshakeBtn = document.querySelector('#neural-handshake-btn');
 const handshakeStatus = document.querySelector('#handshake-status');
+const playbackPanel = document.querySelector('.playback');
+const neuralMesh = document.querySelector('#neural-mesh');
+const lyricsStream = document.querySelector('#lyrics-stream');
 
 const HISTORY_KEY = 'jukebox-session-history-v1';
 const MAX_HISTORY_ITEMS = 5;
 const WAVE_BAR_COUNT = 28;
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const phaseMeta = {
   'PEAK-BASS': { key: 'peak-bass', label: 'Peak-Bass', bpm: 136, angle: -135 },
   'MAIN-FLOOR': { key: 'main-floor', label: 'Main-Floor', bpm: 128, angle: -45 },
@@ -29,6 +33,8 @@ let isGenerating = false;
 let waveInterval = null;
 let isDraggingWheel = false;
 let isWaveAnimating = false;
+let meshAnimationFrame = null;
+let meshPulse = 0;
 
 const safeVibrate = (pattern) => {
   if ('vibrate' in navigator && typeof navigator.vibrate === 'function') {
@@ -88,10 +94,86 @@ const renderHistory = () => {
   });
 };
 
+const drawNeuralMesh = () => {
+  if (!neuralMesh) return;
+
+  const context = neuralMesh.getContext('2d');
+  if (!context) return;
+
+  const rect = neuralMesh.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  const width = Math.max(1, Math.floor(rect.width * ratio));
+  const height = Math.max(1, Math.floor(rect.height * ratio));
+
+  if (neuralMesh.width !== width || neuralMesh.height !== height) {
+    neuralMesh.width = width;
+    neuralMesh.height = height;
+  }
+
+  context.clearRect(0, 0, width, height);
+  context.lineWidth = 1 * ratio;
+  context.globalCompositeOperation = 'screen';
+
+  const time = prefersReducedMotion ? 0 : performance.now() / 800;
+  const columns = 7;
+  const rows = 4;
+  const points = [];
+
+  for (let row = 0; row < rows; row += 1) {
+    for (let column = 0; column < columns; column += 1) {
+      const x = (column / (columns - 1)) * width;
+      const y = (row / (rows - 1)) * height;
+      const drift = Math.sin(time + column * 0.8 + row * 1.4) * 8 * ratio * meshPulse;
+      points.push({ x: x + drift, y: y - drift * 0.45 });
+    }
+  }
+
+  points.forEach((point, index) => {
+    const next = index % columns === columns - 1 ? null : points[index + 1];
+    const below = points[index + columns];
+    const alpha = 0.16 + meshPulse * 0.34;
+    context.strokeStyle = `rgba(0, 230, 242, ${alpha})`;
+
+    [next, below].forEach((target) => {
+      if (!target) return;
+      context.beginPath();
+      context.moveTo(point.x, point.y);
+      context.lineTo(target.x, target.y);
+      context.stroke();
+    });
+
+    context.fillStyle = `rgba(234, 0, 242, ${0.22 + meshPulse * 0.48})`;
+    context.beginPath();
+    context.arc(point.x, point.y, (1.2 + meshPulse * 1.8) * ratio, 0, Math.PI * 2);
+    context.fill();
+  });
+};
+
+const syncMeshAnimationState = () => {
+  drawNeuralMesh();
+
+  if (prefersReducedMotion || meshAnimationFrame || !isWaveAnimating) return;
+
+  const tick = () => {
+    meshPulse = isWaveAnimating ? Math.min(1, meshPulse + 0.06) : Math.max(0, meshPulse - 0.08);
+    drawNeuralMesh();
+
+    if (isWaveAnimating || meshPulse > 0) {
+      meshAnimationFrame = requestAnimationFrame(tick);
+      return;
+    }
+
+    meshAnimationFrame = null;
+  };
+
+  meshAnimationFrame = requestAnimationFrame(tick);
+};
+
 const syncWaveAnimationState = () => {
   const shouldAnimate = isGenerating || Boolean(audioEl?.src && !audioEl?.paused);
   if (shouldAnimate === isWaveAnimating) return;
   isWaveAnimating = shouldAnimate;
+  syncMeshAnimationState();
 
   if (isWaveAnimating && !waveInterval) {
     waveInterval = setInterval(updateWaveform, 150);
@@ -235,6 +317,13 @@ const enterBooth = async () => {
     if (payload?.lyrics && lyricsEl) {
       lyricsEl.textContent = payload.lyrics;
     }
+    if (lyricsStream) {
+      lyricsStream.textContent = payload?.lyrics || 'Synthesizing next movement...';
+    }
+    if (playbackPanel) {
+      playbackPanel.classList.add('is-synced');
+      window.setTimeout(() => playbackPanel.classList.remove('is-synced'), 1400);
+    }
 
     saveSessionEntry({ phase: selectedPhase, atmosphere, artistSeed });
     safeVibrate([18, 32, 18]);
@@ -321,8 +410,11 @@ if (phaseWheel) {
 }
 
 ensureWaveformBars();
+drawNeuralMesh();
 renderHistory();
 applyPhaseTheme(selectedPhase);
+
+window.addEventListener('resize', drawNeuralMesh);
 
 if (historyExportBtn) {
   historyExportBtn.addEventListener('click', () => {
@@ -438,6 +530,13 @@ if (form) {
       if (payload?.lyrics) {
         lyricsEl.textContent = payload.lyrics;
       }
+      if (lyricsStream) {
+        lyricsStream.textContent = payload?.lyrics || 'Synthesizing next movement...';
+      }
+      if (playbackPanel) {
+        playbackPanel.classList.add('is-synced');
+        window.setTimeout(() => playbackPanel.classList.remove('is-synced'), 1400);
+      }
 
       saveSessionEntry({ phase: selectedPhase, atmosphere, artistSeed });
 
@@ -456,11 +555,17 @@ if (form) {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     isWaveAnimating = false;
+    if (meshAnimationFrame) {
+      cancelAnimationFrame(meshAnimationFrame);
+      meshAnimationFrame = null;
+    }
+    meshPulse = 0;
     if (waveInterval) {
       clearInterval(waveInterval);
       waveInterval = null;
     }
     updateWaveform();
+    drawNeuralMesh();
     return;
   }
   syncWaveAnimationState();

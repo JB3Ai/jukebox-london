@@ -485,11 +485,35 @@ a:focus-visible {
   padding: 1rem;
 }
 
+.playback.is-synced {
+  box-shadow:
+    0 0 80px rgba(234, 0, 242, 0.34),
+    inset 0 0 28px color-mix(in srgb, var(--phase-accent) 14%, transparent);
+}
+
 .playback-title {
   margin: 0;
   text-transform: uppercase;
   letter-spacing: 0.1em;
   color: var(--mist-blue);
+}
+
+.visualizer-container {
+  margin-top: 0.85rem;
+  height: 120px;
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--phase-secondary) 32%, transparent);
+  background:
+    radial-gradient(circle at 20% 20%, color-mix(in srgb, var(--phase-secondary) 22%, transparent), transparent 34%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.055), rgba(255, 255, 255, 0.01));
+  box-shadow: inset 0 0 24px rgba(0, 0, 0, 0.36);
+}
+
+#neural-mesh {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .waveform {
@@ -578,6 +602,15 @@ a:focus-visible {
   max-width: 44ch;
 }
 
+.lyrics-stream {
+  margin-top: 0.7rem;
+  color: rgba(255, 255, 255, 0.56);
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.82rem;
+  font-style: italic;
+  line-height: 1.55;
+}
+
 .neon-border-cyan {
   border-color: rgba(0, 230, 242, 0.4);
   box-shadow:
@@ -622,5 +655,16 @@ a:focus-visible {
 
   .phase-grid {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
   }
 }

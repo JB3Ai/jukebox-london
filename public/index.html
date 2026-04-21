@@ -152,8 +152,14 @@
 
         <div class="playback glass-card neon-border-magenta">
           <p class="playback-title">Now Playing</p>
+          <div id="visualizer-container" class="visualizer-container" aria-hidden="true">
+            <canvas id="neural-mesh"></canvas>
+          </div>
           <div id="waveform-visualizer" class="waveform" aria-hidden="true"></div>
           <audio id="generated-audio" controls preload="none"></audio>
+          <div id="lyrics-stream" class="lyrics-stream">
+            Neural mesh is waiting for the first signal.
+          </div>
           <p id="lyrics" class="lyrics">
             Lyrics and composition notes from the model will appear here.
           </p>
