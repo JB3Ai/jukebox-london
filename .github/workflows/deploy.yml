@@ -37,6 +37,7 @@ jobs:
             set -e
             cd /home/${{ secrets.DEPLOY_USER }}/repositories/jukebox-london
             git pull --ff-only origin main
-            npm ci --omit=dev
+            source /home/${{ secrets.DEPLOY_USER }}/nodevenv/repositories/jukebox-london/24/bin/activate
+            npm install --omit=dev
             mkdir -p tmp
             touch tmp/restart.txt
