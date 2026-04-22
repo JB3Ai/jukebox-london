@@ -2,6 +2,6 @@
 deployment:
   tasks:
     - /bin/echo "Deploying JukeBox from /home/appjbaic/repositories/jukebox-london"
-    - source /home/appjbaic/nodevenv/repositories/jukebox-london/24/bin/activate && cd /home/appjbaic/repositories/jukebox-london && npm install --omit=dev
+    - cd /home/appjbaic/repositories/jukebox-london && npm ci --omit=dev
     - /bin/mkdir -p /home/appjbaic/repositories/jukebox-london/tmp
     - /usr/bin/touch /home/appjbaic/repositories/jukebox-london/tmp/restart.txt
