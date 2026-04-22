@@ -11,7 +11,6 @@
 | Brand Name | JukeBox London | Full product name |
 | Tagline | *"The Sound of Now"* | Used in hero copy |
 | Domain | app.jb3ai.com | Primary app URL |
-| MODE | Brutalist-Underground-v1.0 | Replaces `London-Legend-2026`; prioritises rough xeroxed Underground energy over smooth liquid glass |
 
 ---
 
